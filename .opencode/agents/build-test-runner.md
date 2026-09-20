@@ -46,7 +46,7 @@ Before any inspection, read these files in full:
 
 ## Project context
 
-- `ino/MySat_main/` — ESP32-CAM firmware. Modules: `power_measure.h`, `environment_sensor.h`, `ADC.h`, `server.h`, `control.h`, `sensors_data.h`, `position_sensor.h`, `data_logger.h`, `console.h`, `camera.h`, `event_log.h`, `RTC.h`, `camera_pins.h`, plus `MySat_main.ino` and `index.html`. LittleFS assets under `ino/MySat_main/data/`.
+- `ino/MySat_main/` — ESP32-CAM firmware. Modules: `power_measure.h`, `environment_sensor.h`, `ADC.h`, `server.h`, `control.h`, `sensors_data.h`, `position_sensor.h`, `data_logger.h`, `console.h`, `camera.h`, `event_log.h`, `RTC.h`, `camera_pins.h`, plus `MySat_main.ino`. LittleFS assets under `ino/MySat_main/data/`. `index.html` exists but is a stale standalone prototype (per `ROADMAP.md`); the live Web GUI is `htmlContent` in `server.h` — flag any diff that edits `index.html` instead of `server.h`.
 - `ino/MySat_Nano_ATmega328p/MySat_Nano_ATmega328p.ino` — ATmega328P firmware (single sketch, I2C slave at 0x08).
 - The two boards cooperate over I2C; ESP32-CAM is the main OBC, ATmega328P is auxiliary.
 
