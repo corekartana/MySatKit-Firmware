@@ -1,10 +1,10 @@
 # OpenCode agent definitions are committed and shared with the team.
-# Only transient/runtime state under .opencode should be ignored.
-.opencode/sessions/
-.opencode/cache/
-.opencode/logs/
-.opencode/history/
-.opencode/state/
+# Ignore everything under .opencode/ by default, then allowlist only the
+# agent definitions so future runtime dirs (sessions, cache, logs, etc.)
+# cannot be accidentally committed.
+.opencode/*
+!.opencode/agents/
+!.opencode/agents/**
 
 # Local AGENTS.md (kept out of repo; .opencode/agents/ is the source of truth).
 AGENTS.md
@@ -14,7 +14,6 @@ build/
 *.build/
 *.elf
 *.hex
-*.bin
 *.map
 
 # OS / editor cruft.

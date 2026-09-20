@@ -4,17 +4,15 @@ mode: subagent
 model: ollama-cloud/glm-5.2
 color: "#6bcf7f"
 permissions:
-  - action: edit
-    resource: "ino/**"
-    effect: deny
-  - action: write
-    resource: "ino/**"
-    effect: deny
-  - action: edit
-    resource: ".opencode/**"
+  # Read-only git only (MAJOR #2: invert policy — deny all shell, then allow only safe reads).
+  - action: shell
+    resource: "*"
     effect: deny
   - action: shell
     resource: "git status"
+    effect: allow
+  - action: shell
+    resource: "git status *"
     effect: allow
   - action: shell
     resource: "git diff *"
@@ -28,17 +26,12 @@ permissions:
   - action: shell
     resource: "git branch *"
     effect: allow
-  - action: shell
-    resource: "git push *"
+  # Pure read-only role: deny all file mutation (MAJOR #3, #4).
+  - action: edit
+    resource: "*"
     effect: deny
-  - action: shell
-    resource: "git commit *"
-    effect: deny
-  - action: shell
-    resource: "arduino-cli *"
-    effect: deny
-  - action: shell
-    resource: "cppcheck *"
+  - action: write
+    resource: "*"
     effect: deny
 ---
 

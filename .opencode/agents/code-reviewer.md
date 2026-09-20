@@ -4,17 +4,15 @@ mode: subagent
 model: ollama-cloud/glm-5.2
 color: "#b07cf6"
 permissions:
-  - action: edit
-    resource: "ino/**"
-    effect: deny
-  - action: write
-    resource: "ino/**"
-    effect: deny
-  - action: edit
-    resource: ".opencode/**"
+  # Read-only git only (MAJOR #2: invert policy — deny all shell, then allow only safe reads).
+  - action: shell
+    resource: "*"
     effect: deny
   - action: shell
     resource: "git status"
+    effect: allow
+  - action: shell
+    resource: "git status *"
     effect: allow
   - action: shell
     resource: "git diff *"
@@ -28,11 +26,12 @@ permissions:
   - action: shell
     resource: "git branch *"
     effect: allow
-  - action: shell
-    resource: "git push *"
+  # Pure read-only role: deny all file mutation (MAJOR #3, #4).
+  - action: edit
+    resource: "*"
     effect: deny
-  - action: shell
-    resource: "git commit *"
+  - action: write
+    resource: "*"
     effect: deny
 ---
 
@@ -48,6 +47,7 @@ Before reviewing, read these files in full:
 ## Project context
 
 - Two boards cooperate over I2C: **ESP32-CAM** (main OBC, `ino/MySat_main/`) and **ATmega328P** (auxiliary, `ino/MySat_Nano_ATmega328p/`).
+- ESP32-CAM modules: `power_measure.h`, `environment_sensor.h`, `ADC.h`, `server.h`, `control.h`, `sensors_data.h`, `position_sensor.h`, `data_logger.h`, `console.h`, `camera.h`, `event_log.h`, `RTC.h`, `camera_pins.h`, plus `MySat_main.ino`. LittleFS assets under `ino/MySat_main/data/`. `index.html` exists but is a stale standalone prototype (per `ROADMAP.md`); the live Web GUI is `htmlContent` in `server.h`. ATmega328P is a single sketch `MySat_Nano_ATmega328p.ino` (I2C slave at 0x08).
 - ESP32-CAM modules: `power_measure.h`, `environment_sensor.h`, `ADC.h`, `server.h`, `control.h`, `sensors_data.h`, `position_sensor.h`, `data_logger.h`, `console.h`, `camera.h`, `event_log.h`, `RTC.h`, `camera_pins.h`.
 - Toolchain: Arduino IDE 2.0+ only; ESP32 Arduino core 3.x (pin-based LEDC API). No CLI build, no linter, no automated tests — verification is on hardware.
 - Fork versioning: `+kartana` suffix on version strings for this fork; dropped when contributing back to upstream.

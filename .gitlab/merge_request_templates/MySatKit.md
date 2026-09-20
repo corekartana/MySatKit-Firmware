@@ -56,22 +56,29 @@
 ## Static inspection (build-test-runner)
 
 <!-- Paste the summary from the build-test-runner agent, or link to the
-     run. The MR is not ready to merge until this is clean. -->
+     run. The report must correspond to the latest commit (HEAD) on this
+     source branch — a report run on an earlier commit is stale after
+     further edits. The MR is not ready to merge until this is clean. -->
 
 - [ ] build-test-runner report attached and clean
+- [ ] Report corresponds to the latest commit (HEAD) on this source branch
 
 ## Code review (code-reviewer)
 
 <!-- Paste the verdict from the code-reviewer agent, or link to the run.
      REQUEST CHANGES or BLOCK must be resolved before merge. -->
 
-- [ ] code-reviewer verdict: APPROVE
+- [ ] Verdict: APPROVE
+      <!-- Do not check for REQUEST CHANGES or BLOCK — resolve findings and re-run the reviewer first. -->
+- [ ] Report corresponds to the latest commit (HEAD) on this source branch
 
 ## Hardware test
 
 <!-- CONTRIBUTING.md requires hardware verification. Fill in the checklist. -->
 
-- [ ] Board(s) flashed: ESP32-CAM / ATmega328P / both
+- [ ] Board(s) flashed (mark each that was tested):
+      - [ ] ESP32-CAM (`ino/MySat_main/`)
+      - [ ] ATmega328P (`ino/MySat_Nano_ATmega328p/`)
 - [ ] ESP32 Arduino core version: <!-- e.g. 3.3.11 -->
 - [ ] Serial monitor exercised at 115200 baud
 - [ ] Serial commands touched by this change verified
