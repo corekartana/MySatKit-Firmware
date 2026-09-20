@@ -29,6 +29,23 @@ This repository contains the main firmware for MySat Kit microcontrollers (ESP32
 
 # Release notes
 
+## V.1.4.4+kartana
+
+**Release date:** 2026/09/20  
+**Changes**:
+|||
+|:-|--|
+| Bug Fixes → | • fixed Signal LED blink-resolution bug: `evaluateSystemState()` now runs every 500ms instead of every 5s (blink intervals 800/200ms were invisible at 5s polling) |
+| New Features → | • Signal LED diagnostic patterns: priority-based multi-condition indication (red=critical/sensor-missing, blue=WiFi, yellow=sensor issues, cyan=ADS1015 missing, purple=debug mode, red solid=low battery <3.3V) |
+
+**Microcontoller firmware versions:**
+> *ESP32-CAM:* v.1.4.4+kartana  
+> *ATmega 328p:* v.1.3.0+kartana (unchanged)
+
+**MySat boards support:**
+> *full:* v.1.5.6+  
+> *partial:* v.1.5.2+
+
 ## V.1.4.2+kartana
 
 **Release date:** 2026/09/20  

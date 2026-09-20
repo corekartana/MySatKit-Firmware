@@ -71,20 +71,21 @@ const unsigned long SENSOR_INTERVAL = 500;
 
 void loop() {
   if (useWiFi.equalsIgnoreCase("Yes")) {
-    server.handleClient(); 
+    server.handleClient();
   }
   handleCommands();
-  checkSystemState();
-  updateBlinkStarLed();
 
   unsigned long now = millis();
+  pointer_of_sensors* data = nullptr;
   if (now - lastSensorUpdate >= SENSOR_INTERVAL) {
      lastSensorUpdate = now;
      finalizeSystemStartup(); // Check stable system startup (runs only once)
-     pointer_of_sensors* data = get_sensors_data();
+     data = get_sensors_data();
      outputData(data);
   }
 
+  checkSystemState(data);  //data may be nullptr on iterations without sensor read — evaluateSystemState handles nullptr
+  updateBlinkStarLed();
   updateSystemHeartbeat(); // Update Heartbeat every 5 seconds
 
   saveBsecState();
