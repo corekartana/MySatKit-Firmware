@@ -16,11 +16,38 @@ This repository contains the main firmware for MySat Kit microcontrollers (ESP32
   - `MySat_Nano_ATmega328p` - for Nano board (ATmega328P)
 - `libraries.zip` - archive with libs for ESP32 firmware
 
+## Toolchain requirements
 
+- **Arduino IDE 2.0+**
+- **ESP32 Arduino core 3.x** (tested with 3.3.11) — required for `MySat_main` (uses the pin-based LEDC API: `ledcAttach`/`ledcWrite(pin, …)`). Core 2.x is no longer compatible.
+- **Arduino Nano** board support (ATmega328P) for `MySat_Nano_ATmega328p`.
+- Third-party libraries are bundled in `libraries.zip`. Extract them into the Arduino sketchbook `libraries/` folder, not into this repo.
+- `WebServer.h` is provided by the ESP32 Arduino core's built-in `WebServer` library — do not install a separate copy in the sketchbook `libraries/` folder (it triggers a "multiple libraries" warning).
+- LittleFS static assets under `ino/MySat_main/data/` are flashed via the Arduino IDE **"Sketch data Upload"** tool, separately from the firmware.
 
 ---
 
 # Release notes
+
+## V.1.4.2+kartana
+
+**Release date:** 2026/09/20  
+**Changes**:
+|||
+|:-|--|
+| Compatibility → | • migrated `MySat_main` Star LED driver from ESP32 Arduino core 2.x LEDC API (`ledcSetup`/`ledcAttachPin`) to core 3.x pin-based API (`ledcAttach`/`ledcWrite(pin, …)`) |
+|                | • added `+kartana` fork identifier to firmware version strings (ESP32-CAM and ATmega328P) |
+| Docs → | • added `CONTRIBUTING.md` |
+|        | • added "Toolchain requirements" section to README |
+|        | • added `.gitignore` |
+
+**Microcontoller firmware versions:**
+> *ESP32-CAM:* v.1.4.2+kartana  
+> *ATmega 328p:* v.1.3.0+kartana
+
+**MySat boards support:**
+> *full:* v.1.5.6+  
+> *partial:* v.1.5.2+
 
 ## V.1.4.1
 
@@ -139,3 +166,7 @@ This repository contains the main firmware for MySat Kit microcontrollers (ESP32
 
 **MySat boards support:**
 > *full:* v.1.5.2 - v.1.5.4 (no newer!)
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on submitting changes.
