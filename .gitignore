@@ -1,1 +1,26 @@
+# OpenCode agent definitions are committed and shared with the team.
+# Only transient/runtime state under .opencode should be ignored.
+.opencode/sessions/
+.opencode/cache/
+.opencode/logs/
+.opencode/history/
+.opencode/state/
+
+# Local AGENTS.md (kept out of repo; .opencode/agents/ is the source of truth).
 AGENTS.md
+
+# Arduino IDE build artifacts (never belonged in the repo).
+build/
+*.build/
+*.elf
+*.hex
+*.bin
+*.map
+
+# OS / editor cruft.
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.vscode/
+.idea/
