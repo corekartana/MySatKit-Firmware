@@ -6,7 +6,7 @@
  * Main satellite firmware that simulates CubeSat operations and 
  *   manages all subsystems of the MySat educational kit
  *
- * version: v.1.4
+ * version: v.1.4.4+kartana
  * author: MySat Developmet team
  * license: Open Source (MIT) – github.com/mysatkit
  *
