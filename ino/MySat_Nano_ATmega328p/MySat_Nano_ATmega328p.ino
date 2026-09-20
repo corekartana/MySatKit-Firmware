@@ -7,13 +7,13 @@
  *  - servomotor (MySat solar panels deployment);
  *  - HC-12 module (MySat radio transceiver);
  *
- * version: v.1.3.0
+ * version: v.1.3.0+kartana
  * date: 2026-07-26
  *
  *
  */
 
-#define VERSION "v.1.3.0"
+#define VERSION "v.1.3.0+kartana"
 
 #include <Wire.h>
 #include <Servo.h> 

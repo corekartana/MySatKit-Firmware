@@ -8,7 +8,6 @@
 
 #define SIGNALLED_BRIGHTNESS 20
 #define STARLED_BRIGHTNESS 65
-#define STARLED_PWM_CHANNEL 0
 #define EEPROM_ADDR_STATE_MOTOR 0
 
 bool stateMotor;
@@ -99,15 +98,14 @@ void checkSystemState(){
 
 void control_light(bool state_light) {  //turns the STAR LED on or off based on the input parameter (true/false)
   if (state_light) {
-    ledcWrite(STARLED_PWM_CHANNEL, STARLED_BRIGHTNESS);
+    ledcWrite(LED, STARLED_BRIGHTNESS);
   } else {
-    ledcWrite(STARLED_PWM_CHANNEL, 0);
+    ledcWrite(LED, 0);
   }
 }
 
 void initStarLed() {  //initializes the STAR LED; used in setup()
-  ledcSetup(STARLED_PWM_CHANNEL, 5000, 8);
-  ledcAttachPin(LED, STARLED_PWM_CHANNEL);
+  ledcAttach(LED, 5000, 8);
   control_light(false);
 }
 
