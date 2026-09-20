@@ -36,6 +36,16 @@ Keep these in sync when bumping a release:
 - `VERSION` define in `ino/MySat_Nano_ATmega328p/MySat_Nano_ATmega328p.ino` (ATmega)
 - The README release notes block
 
+## Fork versioning
+
+This is a fork of `MySatKit/MySatKit-Firmware`. To distinguish fork releases from upstream, a `+kartana` build metadata suffix is appended to version strings (per [SemVer 2.0.0](https://semver.org) build metadata rules):
+
+- ESP32-CAM: `v.1.4.2+kartana` (in `FIRMWARE_VERSION`, `console.h`)
+- ATmega328P: `v.1.3.0+kartana` (in `VERSION`, `MySat_Nano_ATmega328p.ino`)
+- README release notes block: `V.1.4.2+kartana`
+
+The `+` separator means the fork version has the same precedence as the upstream base version — it identifies the variant without claiming to be a different release. When changes are contributed back to upstream, the `+kartana` suffix is dropped.
+
 ## Testing
 
 There are no automated tests. Verify changes by:
