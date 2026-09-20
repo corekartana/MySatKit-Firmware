@@ -5,6 +5,9 @@
 #pragma once
 #include <EEPROM.h>
 #include <Adafruit_NeoPixel.h>
+#include "sensors_data.h"      //for init_status, pointer_of_sensors
+#include "position_sensor.h"   //for calibration struct
+extern bool debug_mode_active;
 
 #define SIGNALLED_BRIGHTNESS 20
 #define STARLED_BRIGHTNESS 65
@@ -43,14 +46,25 @@ void initSignalLed() {   //initializes the SIGNAL LED; used in setup()
 }
 
 void setSignalLed(uint8_t r, uint8_t g, uint8_t b, LedMode mode,        //configures the SIGNAL LED settings
-                  uint8_t brightness = SIGNALLED_BRIGHTNESS, uint16_t onInterval = 500, uint16_t offInterval = 0) {
+                   uint8_t brightness = SIGNALLED_BRIGHTNESS, uint16_t onInterval = 500, uint16_t offInterval = 0) {
+  uint16_t off = (offInterval == 0) ? onInterval : offInterval;
+  //Idempotent: if parameters are unchanged, preserve blink phase — don't reset lastUpdate/state.
+  //This lets updateSignalLed() (called every loop iteration) drive the blink independently
+  //of the checkSystemState() throttle interval (500ms). Without this, repeated calls with
+  //the same parameters reset the blink phase on every checkSystemState cycle, so blink
+  //patterns with onInterval >= 500ms never complete a blink cycle (LED stays solid).
+  if (r == signalLed.r && g == signalLed.g && b == signalLed.b &&
+      mode == signalLed.mode && brightness == signalLed.brightness &&
+      onInterval == signalLed.onInterval && off == signalLed.offInterval) {
+    return;
+  }
   signalLed.r = r;
   signalLed.g = g;
   signalLed.b = b;
   signalLed.mode = mode;
   signalLed.brightness = brightness;
   signalLed.onInterval = onInterval;
-  signalLed.offInterval = (offInterval == 0) ? onInterval : offInterval;
+  signalLed.offInterval = off;
   signalLed.lastUpdate = millis();
   signalLed.state = true;  //used within LED_BLINK mode to create the blinking effect
   signalStrip.setBrightness(brightness);
@@ -77,9 +91,52 @@ void updateSignalLed() {      //tracks which LED mode should be used;
   signalStrip.show();
 }
 
-void evaluateSystemState() {     //monitors the system state and triggers appropriate LED indication; 
+void evaluateSystemState(pointer_of_sensors* data) {     //monitors the system state and triggers appropriate LED indication; 
+  //Priority order, first match wins: all-missing > WiFi > low battery > BME > MPU/cal > INA > RTC > ADS > debug > all OK
+  if (!init_status.bme_ && !init_status.mpu_ && !init_status.ads_
+      && !init_status.ina_ && !init_status.rtc_) {
+    setSignalLed(255, 0, 0, LED_BLINK, SIGNALLED_BRIGHTNESS, 200, 200);
+    return;
+  }
+
   if (WiFi.status() != WL_CONNECTED) {
     setSignalLed(0, 0, 255, LED_BLINK, SIGNALLED_BRIGHTNESS, 800, 200);
+    return;
+  }
+
+  if (init_status.ina_ && data && data->ina_
+      && data->ina_->batteryVoltage < 3.3) {
+    setSignalLed(255, 0, 0, LED_SOLID);
+    return;
+  }
+
+  if (!init_status.bme_) {
+    setSignalLed(255, 255, 0, LED_BLINK, SIGNALLED_BRIGHTNESS, 500, 500);
+    return;
+  }
+
+  if (!init_status.mpu_ || !calibration.valid) {
+    setSignalLed(255, 255, 0, LED_SOLID);
+    return;
+  }
+
+  if (!init_status.ina_) {
+    setSignalLed(255, 255, 0, LED_BLINK, SIGNALLED_BRIGHTNESS, 200, 200);
+    return;
+  }
+
+  if (!init_status.rtc_) {
+    setSignalLed(255, 255, 0, LED_BLINK, SIGNALLED_BRIGHTNESS, 1000, 1000);
+    return;
+  }
+
+  if (!init_status.ads_) {
+    setSignalLed(0, 255, 255, LED_BLINK, SIGNALLED_BRIGHTNESS, 500, 500);
+    return;
+  }
+
+  if (debug_mode_active) {
+    setSignalLed(180, 0, 255, LED_SOLID);
     return;
   }
 
@@ -88,9 +145,9 @@ void evaluateSystemState() {     //monitors the system state and triggers approp
 
 unsigned long lastSystemCheck = 0;
 
-void checkSystemState(){
-  if(millis() - lastSystemCheck > 5000){
-    evaluateSystemState();
+void checkSystemState(pointer_of_sensors* data){
+  if(millis() - lastSystemCheck > 500){
+    evaluateSystemState(data);
     lastSystemCheck = millis();
   }
   updateSignalLed();
