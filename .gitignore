@@ -1,1 +1,25 @@
+# OpenCode agent definitions are committed and shared with the team.
+# Ignore everything under .opencode/ by default, then allowlist only the
+# agent definitions so future runtime dirs (sessions, cache, logs, etc.)
+# cannot be accidentally committed.
+.opencode/*
+!.opencode/agents/
+!.opencode/agents/**
+
+# Local AGENTS.md (kept out of repo; .opencode/agents/ is the source of truth).
 AGENTS.md
+
+# Arduino IDE build artifacts (never belonged in the repo).
+build/
+*.build/
+*.elf
+*.hex
+*.map
+
+# OS / editor cruft.
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.vscode/
+.idea/
