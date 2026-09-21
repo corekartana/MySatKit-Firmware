@@ -411,6 +411,7 @@ const char* htmlContent = R"###(
             <div class="col-lg-4 text-data  m-2">
               <h3 id = "text_data">Battery:</h3>
               <h4 id = "battery_v">0.00 V</h4>
+              <h4 id = "battery_soc">--%</h4>
               <div id = "charging_status" class="charging-label"></div>
             </div>
             <div class="col-lg-3 text-data  m-2">
@@ -965,7 +966,9 @@ setInterval(updateConnectionStatus, 1000);
                 document.getElementById("temperature").textContent = responseData.temperature.toFixed(2) + ' °C';
                 let bV = responseData.battery_v;
                 let bC = responseData.battery_c;
+                let bSoC = responseData.battery_soc;
                 document.getElementById("battery_v").textContent = bV.toFixed(2)+ ' V';
+                document.getElementById("battery_soc").textContent = bSoC + '%';
                 let chargingElement = document.getElementById("charging_status");
                 if (bV > 4.0 && bC < -5.0) {
                   chargingElement.textContent = "Battery charging";
@@ -1178,10 +1181,12 @@ String* generateSensorsDataJson(pointer_of_sensors* data_, bool motor_state) {
     json_sensors["battery_v"] = data_->ina_->batteryVoltage;
     json_sensors["battery_c"] = data_->ina_->batteryCurrent;
     json_sensors["solarPanels_v"] = data_->ina_->SolarPanelVoltage;
+    json_sensors["battery_soc"] = data_->ina_->battery_soc;
   }else{
     json_sensors["battery_v"] = 0;
     json_sensors["battery_c"] = 0;
     json_sensors["solarPanels_v"] = 0;
+    json_sensors["battery_soc"] = 0;
   }
   json_sensors["motor_state"] = motor_state;
   json_sensors["callSign"] = callSign;

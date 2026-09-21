@@ -29,6 +29,27 @@ This repository contains the main firmware for MySat Kit microcontrollers (ESP32
 
 # Release notes
 
+## V.1.4.5+kartana
+
+**Release date:** 2026/09/21  
+**Changes**:
+|||
+|:-|--|
+| New Features → | • Battery state-of-charge (SoC) estimation from voltage via lookup table (Li-ion discharge curve) |
+|                | • `battery_soc` field in `/get_data` JSON (0-100%) |
+|                | • Web GUI battery panel now shows SoC percentage |
+|                | • `BATTERY_LOW` event log entry when SoC < 20% (with hysteresis — recovers at >25%) |
+|                | • `BATTERY_RECOVERED` event log entry when SoC rises above 25% |
+| Changes → | • Signal LED low-battery threshold now uses SoC field (<20%, aligned with BATTERY_LOW event) instead of hardcoded voltage (<3.3V) |
+
+**Microcontroller firmware versions:**
+> *ESP32-CAM:* v.1.4.5+kartana  
+> *ATmega 328p:* v.1.3.0+kartana (unchanged)
+
+**MySat boards support:**
+> *full:* v.1.5.6+  
+> *partial:* v.1.5.2+
+
 ## V.1.4.4+kartana
 
 **Release date:** 2026/09/20  

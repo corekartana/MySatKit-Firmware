@@ -46,7 +46,7 @@ int getLoggingState() {
 
 String createCSVHeader() {
   return "RTC_Time,ESP32_Uptime,Temperature,Pressure,Humidity,Gas_Resistance,IAQ,IAQ_Accuracy,"
-         "Roll - X,Pitch - Y,Yaw - Z,PH1,PH2,PH3,PH4,Battery_V,Battery_I,Solar_V,Solar_I_L,Solar_I_R\n";
+         "Roll - X,Pitch - Y,Yaw - Z,PH1,PH2,PH3,PH4,Battery_V,Battery_I,Battery_SoC,Solar_V,Solar_I_L,Solar_I_R\n";
 }
 
 bool createNewLogFile() {
@@ -268,11 +268,12 @@ void writeDataRow(pointer_of_sensors* data) {
     if (IL < 0) IL = 0;
     if (IR < 0) IR = 0;
     pos += snprintf(csv_line + pos, sizeof(csv_line) - pos,
-                    "%.2f,%.2f,%.2f,%.2f,%.2f",
+                    "%.2f,%.2f,%u,%.2f,%.2f,%.2f",
                     data->ina_->batteryVoltage, data->ina_->batteryCurrent,
+                    data->ina_->battery_soc,
                     data->ina_->SolarPanelVoltage, IL, IR);
   } else {
-    pos += snprintf(csv_line + pos, sizeof(csv_line) - pos, "N/A,N/A,N/A,N/A,N/A");
+    pos += snprintf(csv_line + pos, sizeof(csv_line) - pos, "N/A,N/A,N/A,N/A,N/A,N/A");
   }
 
   pos += snprintf(csv_line + pos, sizeof(csv_line) - pos, "\n");

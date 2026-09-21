@@ -7,6 +7,7 @@
 #include <Adafruit_NeoPixel.h>
 #include "sensors_data.h"      //for init_status, pointer_of_sensors
 #include "position_sensor.h"   //for calibration struct
+#include "event_log.h"         //for writeEventLog (BATTERY_LOW/RECOVERED events)
 extern bool debug_mode_active;
 
 #define SIGNALLED_BRIGHTNESS 20
@@ -105,7 +106,7 @@ void evaluateSystemState(pointer_of_sensors* data) {     //monitors the system s
   }
 
   if (init_status.ina_ && data && data->ina_
-      && data->ina_->batteryVoltage < 3.3) {
+      && data->ina_->battery_soc < 20) {
     setSignalLed(255, 0, 0, LED_SOLID);
     return;
   }
@@ -144,11 +145,24 @@ void evaluateSystemState(pointer_of_sensors* data) {     //monitors the system s
 }
 
 unsigned long lastSystemCheck = 0;
+bool batteryLowActive = false;
 
 void checkSystemState(pointer_of_sensors* data){
   if(millis() - lastSystemCheck > 500){
     evaluateSystemState(data);
     lastSystemCheck = millis();
+
+    //Hysteresis: trigger BATTERY_LOW below 20% SoC, only clear above 25% to avoid event spam at the boundary.
+    if (init_status.ina_ && data && data->ina_) {
+      uint8_t soc = data->ina_->battery_soc;
+      if (soc < 20 && !batteryLowActive) {
+        writeEventLog("BATTERY_LOW " + String(data->ina_->batteryVoltage, 2) + "V " + String(soc) + "%");
+        batteryLowActive = true;
+      } else if (soc > 25 && batteryLowActive) {
+        writeEventLog("BATTERY_RECOVERED " + String(data->ina_->batteryVoltage, 2) + "V " + String(soc) + "%");
+        batteryLowActive = false;
+      }
+    }
   }
   updateSignalLed();
 }

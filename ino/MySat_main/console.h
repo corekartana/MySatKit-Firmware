@@ -4,7 +4,7 @@
 #include "data_logger.h"
 #include "event_log.h"
 #include <LittleFS.h>
-#define FIRMWARE_VERSION "v.1.4.4+kartana"
+#define FIRMWARE_VERSION "v.1.4.5+kartana"
 #define OUTPUT_FREQUENCE 1500
 
 extern String useWiFi;
@@ -360,6 +360,10 @@ void outputDataText(pointer_of_sensors* data_) {
     Serial.print(data_->ina_->batteryCurrent, 2);
     Serial.println(" mA");
 
+    Serial.print("  Battery SoC:  ");
+    Serial.print(data_->ina_->battery_soc);
+    Serial.println(" %");
+
     Serial.print("  Solar Panels: U = ");
     Serial.print(data_->ina_->SolarPanelVoltage, 2);
     Serial.print("  V,");
@@ -523,6 +527,9 @@ void outputDataPlotter(pointer_of_sensors* data_) {
         Serial.print(',');
         Serial.print("SolarI_R:");
         Serial.print(IR, 2);
+        Serial.print(',');
+        Serial.print("SoC:");
+        Serial.print(data_->ina_->battery_soc);
       }
       break;
   }
