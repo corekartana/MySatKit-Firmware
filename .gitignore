@@ -1,0 +1,21 @@
+# OpenCode agents and GitLab MR templates — git.smedjen.org only, not on GitHub.
+.opencode/
+.gitlab/
+
+# Local AGENTS.md (kept out of repo).
+AGENTS.md
+
+# Arduino IDE build artifacts (never belonged in the repo).
+build/
+*.build/
+*.elf
+*.hex
+*.map
+
+# OS / editor cruft.
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.vscode/
+.idea/
