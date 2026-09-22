@@ -29,6 +29,23 @@ This repository contains the main firmware for MySat Kit microcontrollers (ESP32
 
 # Release notes
 
+## V.1.4.6+kartana
+
+**Release date:** 2026/09/22  
+**Changes**:
+|||
+|:-|--|
+| New Features → | • Solar panel L/R current (`solar_i_l`, `solar_i_r`) added to `/get_data` JSON |
+|                | • Web GUI solar panel section now shows per-panel current (L: XX.XX mA, R: XX.XX mA) |
+
+**Microcontroller firmware versions:**
+> *ESP32-CAM:* v.1.4.6+kartana  
+> *ATmega 328p:* v.1.3.0+kartana (unchanged)
+
+**MySat boards support:**
+> *full:* v.1.5.6+  
+> *partial:* v.1.5.2+
+
 ## V.1.4.5+kartana
 
 **Release date:** 2026/09/21  

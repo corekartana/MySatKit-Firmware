@@ -4,7 +4,7 @@
 #include "data_logger.h"
 #include "event_log.h"
 #include <LittleFS.h>
-#define FIRMWARE_VERSION "v.1.4.5+kartana"
+#define FIRMWARE_VERSION "v.1.4.6+kartana"
 #define OUTPUT_FREQUENCE 1500
 
 extern String useWiFi;

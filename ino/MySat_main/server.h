@@ -418,6 +418,8 @@ const char* htmlContent = R"###(
               <h3 id = "text_data" style="white-space: nowrap;">Solar panels:</h3>
               <h4 id = "solarPanels_v">0.00 V</h4>
               <div id="solar_bar" class="solar-bar-style"></div>
+              <h4 id = "solar_i_l" style="font-size: 14px; margin-top: 4px;">L: -- mA</h4>
+              <h4 id = "solar_i_r" style="font-size: 14px; margin-top: 2px;">R: -- mA</h4>
             </div>
           </div>
           <div class = "row">
@@ -983,6 +985,12 @@ setInterval(updateConnectionStatus, 1000);
                   barText += (i <= fullSteps) ? "▮" : "▯";
                 }
                 document.getElementById("solar_bar").textContent = barText;
+                 let sIL = responseData.solar_i_l;
+                 let sIR = responseData.solar_i_r;
+                 if (sIL < 0) sIL = 0;
+                 if (sIR < 0) sIR = 0;
+                 document.getElementById("solar_i_l").textContent = 'L: ' + sIL.toFixed(2) + ' mA';
+                 document.getElementById("solar_i_r").textContent = 'R: ' + sIR.toFixed(2) + ' mA';
                 document.getElementById("gasResistance").textContent = 'G.\u03A9 = ' + responseData.gas_resistance.toFixed(2) + ' KOhm';
                 
                 document.getElementById("roll").textContent = Math.round(responseData.roll) + '°';
@@ -1182,11 +1190,15 @@ String* generateSensorsDataJson(pointer_of_sensors* data_, bool motor_state) {
     json_sensors["battery_c"] = data_->ina_->batteryCurrent;
     json_sensors["solarPanels_v"] = data_->ina_->SolarPanelVoltage;
     json_sensors["battery_soc"] = data_->ina_->battery_soc;
+    json_sensors["solar_i_l"] = data_->ina_->leftSolarPanelCurrent;
+    json_sensors["solar_i_r"] = data_->ina_->rightSolarPanelCurrent;
   }else{
     json_sensors["battery_v"] = 0;
     json_sensors["battery_c"] = 0;
     json_sensors["solarPanels_v"] = 0;
     json_sensors["battery_soc"] = 0;
+    json_sensors["solar_i_l"] = 0;
+    json_sensors["solar_i_r"] = 0;
   }
   json_sensors["motor_state"] = motor_state;
   json_sensors["callSign"] = callSign;
